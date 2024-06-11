@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>가계부 작성하기</title>
+    <style>
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: rgb(241, 241, 241);
+        }
+        .questions {
+            margin-top: 20px;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .answer input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 10px;
+            box-sizing: border-box;
+        }
+        .check-answer {
+            margin-top: 20px;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="content">
+        <h1>가계부 작성하기</h1>
+        <h4>오늘 동진 씨가 사용하고 작성한 가계부입니다. 가계부를 보고 문제를 풀어보세요(1~3).</h4>
+       
+        <table>
+          <tr>
+              <th>목록</th>
+              <th>수입</th>
+              <th>지출</th>
+              <th>잔액</th>
+          </tr>
+          <tr>
+              <td>용돈</td>
+              <td>50,000원</td>
+              <td>0원</td>
+              <td>50,000원</td>
+          </tr>
+          <tr>
+              <td>세탁소</td>
+              <td>0원</td>
+              <td>13,000원</td>
+              <td>?</td>
+          </tr>
+          <tr>
+              <td>중화요리</td>
+              <td>0원</td>
+              <td>47,000원</td>
+              <td>?</td>
+          </tr>
+          <tr>
+              <td>애견 간식</td>
+              <td>0원</td>
+              <td>8,000원</td>
+              <td>?</td>
+          </tr>
+      </table>
+    </div>
+
+    <div class="question">
+        <p>1. 동진 씨가 부족한 돈은 얼마인가요?</p>
+        <input type="text" id="answer1" placeholder="답 입력">
+        <button onclick="checkDeficit()">정답 확인</button>
+        <p id="deficitResult"></p>
+    </div>
+
+    <div class="question">
+        <p>2. 애견 간식은 평소에 모아둔 적립금으로 결제하였고, 중화 요리에서 이벤트로 5천원 할인을 받았습니다. 실제로 사용한 돈은 얼마인가요?</p>
+        <input type="text" id="answer2" placeholder="답 입력">
+        <button onclick="checkActualExpenses()">정답 확인</button>
+        <p id="actualExpensesResult"></p>
+    </div>
+
+    <div class="question">
+        <p>3. 아내가 동진 씨에게 10만원을 더 주었습니다. 현재 동진 씨의 잔액은 총 얼마인가요?</p>
+        <input type="text" id="answer3" placeholder="답 입력">
+        <button onclick="checkNewBalance()">정답 확인</button>
+        <p id="newBalanceResult"></p>
+    </div>
+</div>
+
+<script>
+    // 초기 변수 설정
+    const total = 50000;
+    const laundryExpense = 13000;
+    const chineseFoodExpense = 47000;
+    const petSnackExpense = 8000;
+
+    // 부족한 금액 계산 및 확인
+    function checkDeficit() {
+        const deficit = (laundryExpense + chineseFoodExpense + petSnackExpense) - total;
+        const userAnswer = parseInt(document.getElementById('answer1').value);
+        const result = (deficit === userAnswer) ? '정답입니다!' : '틀렸습니다. 정답은 ' + deficit + '원 입니다.';
+        document.getElementById('deficitResult').innerText = result;
+    }
+
+    // 실제 사용한 금액 계산 및 확인
+    function checkActualExpenses() {
+        const actualChineseFoodExpense = chineseFoodExpense - 5000; 
+        const actualPetSnackExpense = 0; 
+        const actualExpenses = laundryExpense + actualChineseFoodExpense + actualPetSnackExpense;
+        const userAnswer = parseInt(document.getElementById('answer2').value);
+        const result = (actualExpenses === userAnswer) ? '정답입니다!' : '틀렸습니다. 정답은 ' + actualExpenses + '원 입니다.';
+        document.getElementById('actualExpensesResult').innerText = result;
+    }
+
+    // 새로운 잔액 계산 및 확인
+    function checkNewBalance() {
+        const additionalMoney = 100000;
+        const newBalance = total - (laundryExpense + chineseFoodExpense + petSnackExpense) + additionalMoney;
+        const userAnswer = parseInt(document.getElementById('answer3').value);
+        const result = (newBalance === userAnswer) ? '정답입니다!' : '틀렸습니다. 정답은 ' + newBalance + '원 입니다.';
+        document.getElementById('newBalanceResult').innerText = result;
+    }
+</script>
+</body>
+</html>
