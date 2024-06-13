@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>문제 2-2번</title>
+</head>
+<body>
+    <div class="container">
+        <h1>날씨 기호 기억하기</h1>
+        <p>앞서 기억해 둔 <span class="highlight">날씨 기호</span>를 떠올리며 문제를 풀어보세요(1~5).</p>
+        
+        <div id="weather"></div>
+
+        <div class="questions">
+            <div class="question">
+                <label for="answer1">1. 눈이 오는 지역은 어디일까요?</label>
+                <input type="text" id="answer1">
+            </div>
+            <div class="question">
+                <label for="answer2">2. 비가 오는 지역은 어디일까요?</label>
+                <input type="text" id="answer2">
+            </div>
+            <div class="question">
+                <label for="answer3">3. 안개 낀 지역은 어디일까요?</label>
+                <input type="text" id="answer3">
+            </div>
+            <div class="question">
+                <label for="answer4">4. 맑은 날씨를 보이는 지역은 어디일까요?</label>
+                <input type="text" id="answer4">
+            </div>
+            <div class="question">
+                <label for="answer5">5. 일기예보로 고려했을 때, 현재는 무슨 계절일까요?</label>
+                <input type="text" id="answer5">
+            </div>
+        </div>
+
+        <div class="note">날씨 기호를 기억해 주세요.</div>
+
+        <div class="button-container">
+            <button type="button" id="correctbutton">정답 확인</button>
+        </div>
+
+        <div id="results"></div>
+    </div>
+
+    <script>
+        const apiKey = '8f7b365bda2da68e3983adf27c328085';
+        const citiesEnglish = ['Gunsan', 'Jeonju', 'Mokpo', 'Yeosu', 'Yongin', 'Suwon', 'Pyeongtaek', 'Seongnam', 'Pohang', 'Gyeongju', 'Busan', 'Daegu'];
+        const citiesKorean = {
+            'Gunsan': '군산',
+            'Jeonju': '전주',
+            'Mokpo': '목포',
+            'Yeosu': '여수',
+            'Yongin': '용인',
+            'Suwon': '수원',
+            'Pyeongtaek': '평택',
+            'Seongnam': '성남',
+            'Pohang': '포항',
+            'Gyeongju': '경주',
+            'Busan': '부산',
+            'Daegu': '대구'
+        };
+        const weatherData = {};
+
+        function fetchWeather(city) {
+            const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=kr`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const weatherMain = data.weather[0].main;
+                    const celestialObject = mapWeatherToCelestial(weatherMain);
+                    weatherData[city] = celestialObject;
+                    if (Object.keys(weatherData).length === citiesEnglish.length) {
+                        displayWeather();
+                    }
+                })
+                .catch(error => {
+                    console.error(`${city} 지역의 날씨 정보를 가져오는 중 오류가 발생했습니다.`, error);
+                });
+        }
+
+        function displayWeather() {
+            const weatherContainer = document.querySelector('#weather');
+            const weatherTable = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>군산</th>
+                            <th>전주</th>
+                            <th>목포</th>
+                            <th>여수</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>${weatherData['Gunsan'] || ''}</td>
+                            <td>${weatherData['Jeonju'] || ''}</td>
+                            <td>${weatherData['Mokpo'] || ''}</td>
+                            <td>${weatherData['Yeosu'] || ''}</td>
+                        </tr>
+                        <tr>
+                            <td>용인</td>
+                            <td>수원</td>
+                            <td>평택</td>
+                            <td>성남</td>
+                        </tr>
+                        <tr>
+                            <td>${weatherData['Yongin'] || ''}</td>
+                            <td>${weatherData['Suwon'] || ''}</td>
+                            <td>${weatherData['Pyeongtaek'] || ''}</td>
+                            <td>${weatherData['Seongnam'] || ''}</td>
+                        </tr>
+                        <tr>
+                            <td>포항</td>
+                            <td>경주</td>
+                            <td>부산</td>
+                            <td>대구</td>
+                        </tr>
+                        <tr>
+                            <td>${weatherData['Pohang'] || ''}</td>
+                            <td>${weatherData['Gyeongju'] || ''}</td>
+                            <td>${weatherData['Busan'] || ''}</td>
+                            <td>${weatherData['Daegu'] || ''}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+            weatherContainer.innerHTML = weatherTable;
+        }
+
+        function mapWeatherToCelestial(weatherMain) {
+            switch (weatherMain) {
+                case 'Clear':
+                    return '☀️';
+                case 'Clouds':
+                    return '☁️';
+                case 'Rain':
+                case 'Drizzle':
+                case 'Squall':
+                    return '🌧️';
+                case 'Thunderstorm':
+                    return '⛈️';
+                case 'Snow':
+                    return '❄️';
+                case 'Mist':
+                case 'Haze':
+                case 'Smoke':
+                case 'Fog':
+                    return '🌫️';
+                case 'Dust':
+                case 'Sand':
+                case 'Ash':
+                    return '🌪️';
+                default:
+                    return '❌';
+            }
+        }
+
+        function getSeason() {
+            const month = new Date().getMonth() + 1; 
+            let season;
+
+            if (month >= 3 && month <= 5) {
+                season = "봄";
+            } else if (month >= 6 && month <= 8) {
+                season = "여름";
+            } else if (month >= 9 && month <= 11) {
+                season = "가을";
+            } else {
+                season = "겨울";
+            }
+
+            return season;
+        }
+
+        function evaluateAnswer(input, correctAnswer) {
+            return input.trim() === correctAnswer ? '정답' : '오답';
+        }
+
+        function generateResultHTML(question, input, correctAnswer, result) {
+            return `<p>${question}: ${correctAnswer} (입력한 답: ${input}) - ${result}</p>`;
+        }
+
+        function checkAnswers() {
+            const answer1 = document.querySelector('#answer1').value.trim();
+            const answer2 = document.querySelector('#answer2').value.trim();
+            const answer3 = document.querySelector('#answer3').value.trim();
+            const answer4 = document.querySelector('#answer4').value.trim();
+            const answer5 = document.querySelector('#answer5').value.trim();
+
+            const snowCities = [];
+            const rainCities = [];
+            const fogCities = [];
+            const clearCities = [];
+
+            for (const city in weatherData) {
+                if (weatherData[city] === '❄️') snowCities.push(citiesKorean[city]);
+                if (weatherData[city] === '🌧️') rainCities.push(citiesKorean[city]);
+                if (weatherData[city] === '🌫️') fogCities.push(citiesKorean[city]);
+                if (weatherData[city] === '☀️') clearCities.push(citiesKorean[city]);
+            }
+
+            const correctAnswers = {
+                answer1: snowCities.length > 0 ? snowCities.join(', ') : '없음',
+                answer2: rainCities.length > 0 ? rainCities.join(', ') : '없음',
+                answer3: fogCities.length > 0 ? fogCities.join(', ') : '없음',
+                answer4: clearCities.length > 0 ? clearCities.join(', ') : '없음',
+                answer5: getSeason()
+            };
+
+            const resultsContainer = document.querySelector('#results');
+            resultsContainer.innerHTML = `
+                ${generateResultHTML('1. 눈이 오는 지역', answer1, correctAnswers.answer1, evaluateAnswer(answer1, correctAnswers.answer1))}
+                ${generateResultHTML('2. 비가 오는 지역', answer2, correctAnswers.answer2, evaluateAnswer(answer2, correctAnswers.answer2))}
+                ${generateResultHTML('3. 안개 낀 지역', answer3, correctAnswers.answer3, evaluateAnswer(answer3, correctAnswers.answer3))}
+                ${generateResultHTML('4. 맑은 날씨를 보이는 지역', answer4, correctAnswers.answer4, evaluateAnswer(answer4, correctAnswers.answer4))}
+                ${generateResultHTML('5. 현재 계절', answer5, correctAnswers.answer5, evaluateAnswer(answer5, correctAnswers.answer5))}
+            `;
+            document.querySelectorAll('.question input').forEach(input => input.value = '');
+        }
+
+        document.querySelector('#correctbutton').addEventListener('click', checkAnswers);
+
+        citiesEnglish.forEach(city => {
+            fetchWeather(city);
+        });
+    </script>
+
+    <button type="button" class="navyBtn" onClick="location.href='http://127.0.0.1:5500/%EC%98%88%EC%A0%9C/%EB%AC%B8%EC%A0%9C3%EB%B2%88.html'">다음 문제</button>
+</body>
+</html>
