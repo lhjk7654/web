@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>문제 3번</title>
+    <style>      
+         .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        } 
+        .image-container {
+            display: grid;
+            grid-template-areas:
+                "a b"
+                "c c"
+                "d e";
+            grid-row-gap: 18px; /* 행 간격 조정 */
+            grid-column-gap: 200px; /* 열 간격 조정 */
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            border: 2px solid black;
+            width: 315px; /* 프레임 너비 설정 */
+            height: 200px; /* 프레임 높이 설정 */
+           
+        } 
+        .image-container div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .image-container input {
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            text-align: center;
+        }
+        /*옵션 이미지 위치 설정*/
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;  
+            margin-top: 20px;
+        }
+        /*옵션 이미지 크기 및 배경 색상 설정*/
+        .options img {
+            width: 150px;
+            height: 100px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        } 
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        h4, h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            line-height: 1.0; /* h4와 h3 사이의 행 간격 설정 */
+        }
+     
+        #nextPage {
+            position: static;
+            display: flex;
+            justify-content: center;
+            margin-top: 50px;
+        }
+        #nextPage button {
+            padding: 20px 40px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div class="container">
+            <h3>태극기 기억하기</h3>
+            <h3>앞서 기억해 둔 태극기의 각 형태가 들어갈 위치에 알맞은 번호를 적어보세요.</h3>
+            <div class="image-container">
+                <div style="grid-area: a;"><input type="text" maxlength="1" id="input1"></div>
+                <div style="grid-area: b;"><input type="text" maxlength="1" id="input2"></div>
+                <div style="grid-area: c;"><input type="text" maxlength="1" id="input3"></div>
+                <div style="grid-area: d;"><input type="text" maxlength="1" id="input4"></div>
+                <div style="grid-area: e;"><input type="text" maxlength="1" id="input5"></div>
+            </div>
+            <div class="options">       
+                <div>&#9312;</div>
+                <img src="1.png" alt="1" data-number="1">
+                <div>&#9313;</div>
+                <img src="2.png" alt="2" data-number="2">
+            </div>
+            <div class="options"> 
+                <div>&#9314;</div>
+                <img src="3.png" alt="3" data-number="3">
+                <div>&#9315;</div>
+                <img src="4.png" alt="4" data-number="4">
+            </div>
+            <div class="options"> 
+                <div>&#9316;</div>
+                <img src="5.png" alt="5" data-number="5">
+                <div>&#9317;</div>
+                <img src="6.png" alt="6" data-number="6">
+            </div>
+            <div class="options"> 
+            <button id="submitBtn">확인</button> 
+            </div>
+            <p id="result"></p>       
+        </div>
+        
+        <div id="nextPage">
+            <button>⏭️</button>
+        </div>
+        
+    </div>
+    <script>
+         const correctAnswers = [5, 2, 1, 3, 4];//정답 배열
+        //클릭 이벤트 리스너 추가
+        document.getElementById('submitBtn').addEventListener('click', function() { //添加点击事件监听器
+            const inputs = [
+                document.getElementById('input1').value,
+                document.getElementById('input2').value,
+                document.getElementById('input3').value,
+                document.getElementById('input4').value,
+                document.getElementById('input5').value
+            ];
+            
+            //모든 입력이 정답인지 확인
+            let allCorrect = true;
+            for (let i = 0; i < inputs.length; i++) {
+                if (inputs[i] != correctAnswers[i]) {
+                    for(let i = 0; i < inputs.length; i++){    //틀린 입력 비우기
+                        document.getElementById(`input${i+1}`).value = '';
+                    }
+                    allCorrect = false;
+                    //break;
+                }
+            }
+            //결과 표시
+            const result = document.getElementById('result');
+            if (allCorrect) {
+                result.textContent = '정답은 정답입니다!';
+            } else {
+                result.textContent = '정답이 잘못되었습니다. 다시 시도하십시오.';
+            }
+        });
+
+        button = document.querySelector("#nextPage");
+        button.addEventListener("click", () => {
+            window.open("http://127.0.0.1:5500/%EC%98%88%EC%A0%9C/%EB%AC%B8%EC%A0%9C4%EB%B2%88.html", "_self");
+        });
+    </script>
+
+    
+</body>
+</html>
